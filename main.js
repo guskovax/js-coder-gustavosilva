@@ -1,8 +1,24 @@
 const peliculas = [
-    "Aquaman 2",
-    "Cuando acecha la maldad",
-    "Elijo creer",
-    "Wonka"
+    {
+        nombre: "Aquaman 2",
+        genero: "Accion",
+        estreno: 2023
+    },
+    {
+        nombre: "Cuando acecha la maldad",
+        genero: "Terror",
+        estreno: 2023
+    },
+    {
+        nombre: "Elijo creer",
+        genero: "Documental",
+        estreno: 2023
+    },
+    {
+        nombre: "Wonka",
+        genero: "Fantasia",
+        estreno: 2023
+    }
 ];
 
 const precio2d = 900;
@@ -20,19 +36,19 @@ function mostrarCartelera() {
         let opcionPelicula = parseInt(prompt("Elija una película:\n1 - Aquaman 2\n2 - Cuando acecha la maldad\n3 - Elijo creer\n4 - Wonka"));
         switch (opcionPelicula) {
             case 1:
-                peliculaElegida = peliculas[0];
+                peliculaElegida = peliculas[0].nombre;
                 opcionCorrecta = true;
                 break;
             case 2:
-                peliculaElegida = peliculas[1];
+                peliculaElegida = peliculas[1].nombre;
                 opcionCorrecta = true;
                 break;
             case 3:
-                peliculaElegida = peliculas[2];
+                peliculaElegida = peliculas[2].nombre;
                 opcionCorrecta = true;
                 break;
             case 4:
-                peliculaElegida = peliculas[3];
+                peliculaElegida = peliculas[3].nombre;
                 opcionCorrecta = true;
                 break;
             default:
