@@ -29,11 +29,24 @@ let precioElegido;
 let tipoDeFuncion;
 let cantidadDeEntradas;
 let precioTotal;
+let cancelarCompra = false;
 
 function mostrarCartelera() {
+    if (cancelarCompra) return;
     let opcionCorrecta = false;
-    do{
-        let opcionPelicula = parseInt(prompt("Elija una película:\n1 - Aquaman 2\n2 - Cuando acecha la maldad\n3 - Elijo creer\n4 - Wonka"));
+    let opcionPelicula = null;
+
+    do {
+        opcionPelicula = prompt("Elija una película:\n1 - Aquaman 2\n2 - Cuando acecha la maldad\n3 - Elijo creer\n4 - Wonka");
+
+        if (opcionPelicula === null) {
+            alert("Has cancelado la elección. Saliendo del proceso de compra.");
+            cancelarCompra = true;
+            return;
+        }
+
+        opcionPelicula = parseInt(opcionPelicula);
+
         switch (opcionPelicula) {
             case 1:
                 peliculaElegida = peliculas[0].nombre;
@@ -56,14 +69,21 @@ function mostrarCartelera() {
                 opcionCorrecta = false;
                 break;
         }
-    }while (!opcionCorrecta);
+    } while (!opcionCorrecta);
 }
 
 function mostrarPrecios() {
+    if (cancelarCompra) return;
     let opcionCorrecta = false;
     do {
     let elegirPrecios = parseInt(prompt("Elije el tipo de entrada: \n1 - Sala 2D: $900 \n2 - Sala 3D: $1500"));
     
+    if (elegirPrecios === null) {
+        alert("Has cancelado la elección. Saliendo del proceso de compra.");
+        cancelarCompra = true;
+        return;
+    }
+
         switch (elegirPrecios) {
             case 1:
                 precioElegido = precio2d;
@@ -85,19 +105,41 @@ function mostrarPrecios() {
 }
 
 function mostrarCantidad() {
-    let elegirCantidad = parseInt(prompt("Cuantas entradas querés?"))
-    if (!isNaN(elegirCantidad) && elegirCantidad >0){
+    if (cancelarCompra) return;
+    let opcionCorrecta = false;
+
+    do {
+        let elegirCantidad = prompt("Cuantas entradas querés?");
+
+        if (elegirCantidad === null) {
+        alert("Has cancelado la elección. Saliendo del proceso de compra.");
+        cancelarCompra = true;
+        return;
+        }
+
+        elegirCantidad = parseInt(elegirCantidad);
+
+        if (!isNaN(elegirCantidad) && elegirCantidad > 0) {
         cantidadDeEntradas = elegirCantidad;
-    }else {
-        alert ("Elegir una cantidad correcta.")
-        mostrarCantidad();
-    }
+        opcionCorrecta = true;
+    } else {
+        alert("Elegir una cantidad correcta.");
+        }
+    } while (!opcionCorrecta);
 }
 
-mostrarCartelera();
-mostrarPrecios();
-mostrarCantidad();
+document.addEventListener("DOMContentLoaded", function () {
+    let botonCompra = document.getElementById("btn-compra");
 
-precioTotal = precioElegido*cantidadDeEntradas;
+    botonCompra.addEventListener("click", function () {
+    mostrarCartelera();
+    mostrarPrecios();
+    mostrarCantidad();
 
-alert("Su pelicula elegida: " + peliculaElegida + "\nTipo de entrada: " + tipoDeFuncion + "\nPrecio total: $" + precioTotal);
+    if (!cancelarCompra) {
+
+        precioTotal = precioElegido * cantidadDeEntradas;
+        alert("Su pelicula elegida: " + peliculaElegida + "\nTipo de entrada: " + tipoDeFuncion + "\nPrecio total: $" + precioTotal);
+        }
+    });
+    });

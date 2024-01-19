@@ -1,0 +1,57 @@
+*{
+    font-family: Arial, Helvetica, sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: black;
+    text-align: center;
+    color: white;
+}
+
+h1{
+    color: white;
+}
+
+.titulo{
+    text-align: center;
+}
+
+.cartelera{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 75%;
+    margin: 20px auto;
+    place-items: center;
+    gap: 20px;
+}
+
+.pelicula{
+    display: flex;
+    flex-direction: column;
+    max-width: 25vw;
+    height: auto;
+    aspect-ratio: 9/14;
+}
+
+.pelicula img{
+    width: 100%;
+    height: 95%;
+}
+
+
+#btn-compra{
+    margin: 0 auto;
+    padding: 10px;
+    border: 2px solid red;
+    color: red;
+    background-color: black;
+    transition: 300ms;
+}
+
+#btn-compra:hover{
+    border: 2px solid white;
+    color: white;
+}
