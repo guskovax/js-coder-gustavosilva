@@ -99,7 +99,7 @@ btnCompra.addEventListener('click', (evento) =>{
   localStorage.setItem('compra', texto)
 
 
-  const modal = document.getElementsByClassName('modal-body');
+  const modal = document.querySelector('.modal-body');
   modal.innerHTML =
   `<p>Tu pelicula es: ${compra.pelicula}</p>
   <p>Entradas: ${compra.cantidad} x $${compra.valor}</p>
