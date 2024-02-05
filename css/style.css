@@ -19,7 +19,7 @@ h1{
     text-align: center;
 }
 
-.cartelera{
+#cartelera{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     width: 75%;
@@ -54,4 +54,13 @@ h1{
 #btn-compra:hover{
     border: 2px solid white;
     color: white;
+}
+
+.elegida{
+    border: 5px solid white;
+
+}
+
+.modal-content{
+    color: black;
 }

@@ -1,145 +1,110 @@
 const peliculas = [
-    {
-        nombre: "Aquaman 2",
-        genero: "Accion",
-        estreno: 2023
-    },
-    {
-        nombre: "Cuando acecha la maldad",
-        genero: "Terror",
-        estreno: 2023
-    },
-    {
-        nombre: "Elijo creer",
-        genero: "Documental",
-        estreno: 2023
-    },
-    {
-        nombre: "Wonka",
-        genero: "Fantasia",
-        estreno: 2023
-    }
+  {
+      nombre: "Aquaman 2",
+      poster: "./img/Aquaman2.jpg",
+      genero: "Accion",
+      estreno: 2023
+  },
+  {
+      nombre: "Cuando acecha la maldad",
+      poster: "./img/CuandoAcecha.jpg",
+      genero: "Terror",
+      estreno: 2023
+  },
+  {
+      nombre: "Elijo creer",
+      poster: "./img/ElijoCreer.jpg",
+      genero: "Documental",
+      estreno: 2023
+  },
+  {
+      nombre: "Wonka",
+      poster: "./img/Wonka.webp",
+      genero: "Fantasia",
+      estreno: 2023
+  }
 ];
 
-const precio2d = 900;
-const precio3d = 1500;
+const entradas = [
+  {
+    tipo: "2D",
+    precio: 900
+  },
+  {
+    tipo: "3D",
+    precio: 1500
+  }
+]
 
-let peliculaElegida;
-let precioElegido;
-let tipoDeFuncion;
-let cantidadDeEntradas;
-let precioTotal;
-let cancelarCompra = false;
+//Creo las peliculas en la cartelera
+const cartelera = document.getElementById('cartelera');
 
-function mostrarCartelera() {
-    if (cancelarCompra) return;
-    let opcionCorrecta = false;
-    let opcionPelicula = null;
+peliculas.forEach(pelicula => {
+  cartelera.innerHTML +=
+  `<div class="pelicula">
+      <img src="${pelicula.poster}" alt=${pelicula.nombre}>
+      <p>${pelicula.nombre}</p>
+  </div>`
+});
 
-    do {
-        opcionPelicula = prompt("Elija una película:\n1 - Aquaman 2\n2 - Cuando acecha la maldad\n3 - Elijo creer\n4 - Wonka");
 
-        if (opcionPelicula === null) {
-            alert("Has cancelado la elección. Saliendo del proceso de compra.");
-            cancelarCompra = true;
-            return;
-        }
+// El usuario selecciona la película
+const peliculasDisponibles = document.querySelectorAll('.pelicula');
+let peliculaSeleccionada;
 
-        opcionPelicula = parseInt(opcionPelicula);
+peliculasDisponibles[0].classList.add('elegida');
+peliculaSeleccionada = peliculasDisponibles[0].querySelector('p').textContent;
 
-        switch (opcionPelicula) {
-            case 1:
-                peliculaElegida = peliculas[0].nombre;
-                opcionCorrecta = true;
-                break;
-            case 2:
-                peliculaElegida = peliculas[1].nombre;
-                opcionCorrecta = true;
-                break;
-            case 3:
-                peliculaElegida = peliculas[2].nombre;
-                opcionCorrecta = true;
-                break;
-            case 4:
-                peliculaElegida = peliculas[3].nombre;
-                opcionCorrecta = true;
-                break;
-            default:
-                alert("Opción inválida.");
-                opcionCorrecta = false;
-                break;
-        }
-    } while (!opcionCorrecta);
-}
-
-function mostrarPrecios() {
-    if (cancelarCompra) return;
-    let opcionCorrecta = false;
-    do {
-    let elegirPrecios = parseInt(prompt("Elije el tipo de entrada: \n1 - Sala 2D: $900 \n2 - Sala 3D: $1500"));
+peliculasDisponibles.forEach(disponible => {
+  disponible.addEventListener('click', function() {
     
-    if (elegirPrecios === null) {
-        alert("Has cancelado la elección. Saliendo del proceso de compra.");
-        cancelarCompra = true;
-        return;
+    const peliculaElegidaAnterior = document.querySelector('.elegida');
+    if (peliculaElegidaAnterior) {
+      peliculaElegidaAnterior.classList.remove('elegida');
     }
+    
+    this.classList.add('elegida');
+    
+    peliculaSeleccionada = this.querySelector('p').textContent;
 
-        switch (elegirPrecios) {
-            case 1:
-                precioElegido = precio2d;
-                tipoDeFuncion = "Entrada 2D"
-                opcionCorrecta = true;
-                break;
-            case 2:
-                precioElegido = precio3d;
-                tipoDeFuncion = "Entrada 3D";
-                opcionCorrecta = true;
-                break;
-            default:
-                alert("Elije el tipo de entrada correcta.")
-                opcionCorrecta = false;
-                break;
+    console.log('Película seleccionada:', peliculaSeleccionada);
+  });
+});
 
-        }
-    }while (!opcionCorrecta);
-}
 
-function mostrarCantidad() {
-    if (cancelarCompra) return;
-    let opcionCorrecta = false;
+//Valor de entradas a comprar
+const tickets = document.getElementById('tickets');
 
-    do {
-        let elegirCantidad = prompt("Cuantas entradas querés?");
+entradas.forEach(entrada => {
+  tickets.innerHTML +=
+  `<option value="${entrada.precio}">${entrada.tipo} - $${entrada.precio}</option>`
+});
 
-        if (elegirCantidad === null) {
-        alert("Has cancelado la elección. Saliendo del proceso de compra.");
-        cancelarCompra = true;
-        return;
-        }
+const valorEntrada = document.getElementById('tickets');
 
-        elegirCantidad = parseInt(elegirCantidad);
+const cantidadElegida = document.getElementById('cantidad');
 
-        if (!isNaN(elegirCantidad) && elegirCantidad > 0) {
-        cantidadDeEntradas = elegirCantidad;
-        opcionCorrecta = true;
-    } else {
-        alert("Elegir una cantidad correcta.");
-        }
-    } while (!opcionCorrecta);
-}
+const btnCompra = document.getElementById('btn-compra');
 
-document.addEventListener("DOMContentLoaded", function () {
-    let botonCompra = document.getElementById("btn-compra");
 
-    botonCompra.addEventListener("click", function () {
-    mostrarCartelera();
-    mostrarPrecios();
-    mostrarCantidad();
+btnCompra.addEventListener('click', (evento) =>{
+  evento.preventDefault();
 
-    if (!cancelarCompra) {
+  const compra = {
+    pelicula: peliculaSeleccionada,
+    valor: valorEntrada.value,
+    cantidad: cantidadElegida.value
+  }
+  const texto = JSON.stringify(compra)
+  localStorage.setItem('compra', texto)
 
-        precioTotal = precioElegido * cantidadDeEntradas;
-        alert("Su pelicula elegida: " + peliculaElegida + "\nTipo de entrada: " + tipoDeFuncion + "\nPrecio total: $" + precioTotal);
-        }
-    });
-    });
+
+  const modal = document.getElementsByClassName('modal-body');
+  modal.innerHTML =
+  `<p>Tu pelicula es: ${compra.pelicula}</p>
+  <p>Entradas: ${compra.cantidad} x $${compra.valor}</p>
+  <p>Total de tu compra: $${compra.cantidad * compra.valor}</p>
+  `
+
+  console.log(compra)
+})
