@@ -1,30 +1,3 @@
-const peliculas = [
-  {
-      nombre: "Aquaman 2",
-      poster: "./img/Aquaman2.jpg",
-      genero: "Accion",
-      estreno: 2023
-  },
-  {
-      nombre: "Cuando acecha la maldad",
-      poster: "./img/CuandoAcecha.jpg",
-      genero: "Terror",
-      estreno: 2023
-  },
-  {
-      nombre: "Elijo creer",
-      poster: "./img/ElijoCreer.jpg",
-      genero: "Documental",
-      estreno: 2023
-  },
-  {
-      nombre: "Wonka",
-      poster: "./img/Wonka.webp",
-      genero: "Fantasia",
-      estreno: 2023
-  }
-];
-
 const entradas = [
   {
     tipo: "2D",
@@ -34,77 +7,97 @@ const entradas = [
     tipo: "3D",
     precio: 1500
   }
-]
+];
 
-//Creo las peliculas en la cartelera
-const cartelera = document.getElementById('cartelera');
+let peliculaSeleccionada = '';
 
-peliculas.forEach(pelicula => {
-  cartelera.innerHTML +=
-  `<div class="pelicula">
-      <img src="${pelicula.poster}" alt=${pelicula.nombre}>
-      <p>${pelicula.nombre}</p>
-  </div>`
-});
+//Se cargan las peliculas
+const cargarPeliculas = async () => {
+  try {
+    const respuesta = await fetch('https://api.themoviedb.org/3/movie/now_playing?api_key=a9273a252b00978112454d7a24a32d3c&language=es-MX&total_results=8');
 
+    if (respuesta.status === 200) {
+      const datos = await respuesta.json();
 
-// El usuario selecciona la película
-const peliculasDisponibles = document.querySelectorAll('.pelicula');
-let peliculaSeleccionada;
+      let peliculas = '';
+      datos.results.forEach(pelicula => {
+        peliculas += `
+          <div class="pelicula">
+            <img class="poster" src="https://image.tmdb.org/t/p/w500/${pelicula.poster_path}">
+            <p class="titulo">${pelicula.title}</p>
+          </div>
+        `;
+      });
 
-peliculasDisponibles[0].classList.add('elegida');
-peliculaSeleccionada = peliculasDisponibles[0].querySelector('p').textContent;
+      document.getElementById('cartelera').innerHTML = peliculas;
 
-peliculasDisponibles.forEach(disponible => {
-  disponible.addEventListener('click', function() {
-    
-    const peliculaElegidaAnterior = document.querySelector('.elegida');
-    if (peliculaElegidaAnterior) {
-      peliculaElegidaAnterior.classList.remove('elegida');
+    } else if (respuesta.status === 401) {
+      console.log('Error en la key');
+    } else {
+      console.log('Se encontró un error');
     }
-    
-    this.classList.add('elegida');
-    
-    peliculaSeleccionada = this.querySelector('p').textContent;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
+cargarPeliculas();
+
+//Seleccionar pelicula
+document.addEventListener('click', (evento) => {
+  const peliculaElegida = evento.target.closest('.pelicula');
+  if (peliculaElegida) {
+    document.querySelectorAll('.pelicula').forEach(pelicula => {
+      pelicula.classList.remove('elegida');
+    });
+    peliculaElegida.classList.add('elegida');
+
+    peliculaSeleccionada = peliculaElegida.querySelector('.titulo').textContent;
     console.log('Película seleccionada:', peliculaSeleccionada);
-  });
+  }
 });
-
 
 //Valor de entradas a comprar
 const tickets = document.getElementById('tickets');
 
 entradas.forEach(entrada => {
   tickets.innerHTML +=
-  `<option value="${entrada.precio}">${entrada.tipo} - $${entrada.precio}</option>`
+    `<option value="${entrada.precio}">${entrada.tipo} - $${entrada.precio}</option>`;
 });
 
 const valorEntrada = document.getElementById('tickets');
-
 const cantidadElegida = document.getElementById('cantidad');
-
 const btnCompra = document.getElementById('btn-compra');
 
+//Comprar
+btnCompra.addEventListener('click', (evento) => {
 
-btnCompra.addEventListener('click', (evento) =>{
   evento.preventDefault();
+
+  if (!peliculaSeleccionada) {
+    Swal.fire({
+      title: 'Error!',
+      text: 'Do you want to continue',
+      icon: 'error',
+      confirmButtonText: 'Cool'
+    })
+  }
 
   const compra = {
     pelicula: peliculaSeleccionada,
     valor: valorEntrada.value,
     cantidad: cantidadElegida.value
-  }
-  const texto = JSON.stringify(compra)
-  localStorage.setItem('compra', texto)
+  };
 
+  const texto = JSON.stringify(compra);
+  localStorage.setItem('compra', texto);
 
   const modal = document.querySelector('.modal-body');
-  modal.innerHTML =
-  `<p>Tu pelicula es: ${compra.pelicula}</p>
-  <p>Entradas: ${compra.cantidad} x $${compra.valor}</p>
-  <p>Total de tu compra: $${compra.cantidad * compra.valor}</p>
-  `
+  modal.innerHTML = `
+    <p>Tu película es: ${compra.pelicula}</p>
+    <p>Entradas: ${compra.cantidad} x $${compra.valor}</p>
+    <p>Total de tu compra: $${compra.cantidad * compra.valor}</p>
+  `;
 
-  console.log(compra)
-})
+  console.log(compra);
+});
